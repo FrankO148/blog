@@ -1,5 +1,5 @@
 <h1>Blog posts</h1>
-<table>
+<table class="table" id="postsTable">
 	<?php
 		echo $this->Html->tableHeaders(array('Id', 'Title', 'Created','','')); 
 	?>
@@ -21,7 +21,52 @@
 	<?php unset($post); ?>
 </table>
 
-<?php echo $this->Html->link(
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myPostModal">
+  Add Post
+</button>
+
+<?php /* echo $this->Html->link(
 'Add Post',
 array('controller' => 'posts', 'action' => 'add')
-); ?>
+); */
+
+echo $this->element('Modals/new_post_modal');
+
+$postAddUrl = Router::url(array('controller' => 'posts', 'action' => 'add'));
+
+$postViewUrl = Router::url(array('controller' => 'posts', 'action' => 'view'));
+
+
+$scriptJS = $this->Html->scriptBlock(
+<<<JS
+	$(document).ready(function(){
+		$('#PostIndexForm').on('submit',function(event){
+			event.preventDefault();
+			$.ajax(
+			{
+				async:true,
+			 	data:$('#PostIndexForm').serialize(),
+			  	dataType:'html',
+			  	success:function (data, textStatus) {
+			  		add_new_row(data);
+			  	},
+			  	type:'POST',
+			  	url:"$postAddUrl"
+			  }); 
+
+			$('#myPostModal').modal('hide');
+
+			//return false;
+			
+		});
+
+	});
+
+	var add_new_row = function(data){
+		console.log(data);
+		$('#postsTable').append('<tr><td>'+ data.Post['id'] +'</td><td>'+ data.Post.title +'</td><td>'+ data.Post.created +'</td><td>asads</td><td>asdas</td></tr>');
+	};
+JS
+);
+?>
+<?=$scriptJS?>

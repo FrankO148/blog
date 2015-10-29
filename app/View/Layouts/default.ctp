@@ -33,11 +33,13 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 
-		echo $this->Html->css('cake.generic');
+		//echo $this->Html->css('cake.generic');
 		echo $this->Html->css('bootstrap');
 
 		echo $this->fetch('script');
+		echo $this->Html->script('jquery-2.1.4');
 		echo $this->Html->script('bootstrap');
+		//echo $this->Html->script('posts');
 	?>
 </head>
 <body>

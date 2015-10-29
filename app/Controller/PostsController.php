@@ -20,11 +20,25 @@ class PostsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Post->create();
 			if ($this->Post->save($this->request->data)) {
-			$this->Flash->success(__('Your post has been saved.'));
-			return $this->redirect(array('action' => 'index'));
+				$this->Flash->success(__('Your post has been saved.'));
+				if ($this->request->is('ajax')) {
+					$post_id = $this->Post->getLastInsertId();
+					$created_post = $this->Post->findById($post_id);
+					$json_post = json_encode($created_post);
+					$this->response->type('json');
+					$this->response->body($json_post);
+					return $this->response;
+					/*$this->set('created_post', $created_post);
+					return $this->render('added_post');*/
+
+				} else {
+					return $this->redirect(array('action' => 'index'));	
+				}	
+  			}
 		}
+			
 			$this->Flash->error(__('Unable to add your post.'));
-		}
+		
 	}
 
 	public function edit($id = null) {
